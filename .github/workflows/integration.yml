@@ -1,0 +1,47 @@
+name: Integration
+
+# Verifies piece arithmetic against real torrents and their real content,
+# fetched over plain HTTPS -- no BitTorrent client involved.
+#
+# Kept out of ci.yml on purpose: it depends on external mirrors, so a Debian or
+# archive.org outage should never block a pull request.
+
+on:
+  push:
+    branches: [master]
+  # On pull requests, only when this workflow or the network tests themselves
+  # change -- so edits to them are verified without exposing routine PRs to
+  # mirror outages.
+  pull_request:
+    paths:
+      - .github/workflows/integration.yml
+      - tests/test_network.py
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  network:
+    name: real torrents over HTTPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: true
+
+      - run: uv sync --all-groups
+
+      - name: pytest -m network
+        run: uv run pytest -m network -v
