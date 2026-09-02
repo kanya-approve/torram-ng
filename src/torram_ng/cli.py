@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import functools
 import hashlib
 import io
@@ -10,13 +9,14 @@ import sys
 import tempfile
 import bencode
 
+from torram_ng import __version__ as VERSION
+
 
 DELUGE_DIR = '~/.config/deluge/state'
 QBITTORRENT_RESUME_CONF = '~/.config/qBittorrent/qBittorrent-resume.conf'
 FILES_DIR = '~'
 MINIMUM_FILESIZE_TO_SEARCH = 1024 * 1024
 
-VERSION = '0.9.0'
 
 class AnsiFormatter(object):
     aaa = {'RED': "\033[31m",
@@ -37,6 +37,10 @@ class AnsiFormatter(object):
 class BaseFormatter(object):
     def format(self, txt, *code):
         return txt
+
+
+fmt = BaseFormatter()
+args = None
 
 
 class FileInfo():
@@ -327,7 +331,7 @@ def add_incomplete_file_with_different_size(filepath, list):
                     list.append(curr_filepath)
 
 
-def main():
+def run():
     global args
     global save_path
 
@@ -365,10 +369,13 @@ def main():
         guess_file(info, 0, files, pieces, info['piece length'], files_sizes_array, '')
 
 
-if __name__ == "__main__":
+def main(argv=None):
+    global args
+    global fmt
+
     from argparse import ArgumentParser
 
-    parser = ArgumentParser(description='Recreate download directory for .torrent file from fully and partially downloaded file(s).')
+    parser = ArgumentParser(prog='torram-ng', description='Recreate download directory for .torrent file from fully and partially downloaded file(s).')
     parser.add_argument('torrentfile', metavar='torrentFile', help='.torrent file to analyze')
     parser.add_argument('root', metavar='root', help='Directory to recursively search files in')
     parser.add_argument('--symlink', action='store_true',
@@ -388,11 +395,16 @@ if __name__ == "__main__":
     parser.add_argument('--fileext', dest='file_ext', default='',
                         help='Extension to be added to output files (ex, .!qB for incomplete qBittorrent files)')
     parser.add_argument('--version', action='version', version=VERSION)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.use_color:
         fmt = AnsiFormatter()
     else:
         fmt = BaseFormatter()
 
-    main()
+    run()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,12 @@
+torram-ng
+Copyright 2026 Brian K
+
+This product includes software originally developed as "torram"
+(formerly "torrent-upstart") by Volodymyr Buell:
+
+    https://github.com/vbuell/torram
+
+The original project was published without a license file. The Apache
+License 2.0 in this repository covers contributions made to this fork.
+See https://github.com/kanya-approve/torram-ng/issues for the tracking
+issue on resolving the upstream licensing status.

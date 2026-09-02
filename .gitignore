@@ -33,3 +33,11 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# uv
+.venv/
+uv.lock.bak
+
+# pytest / ruff
+.pytest_cache/
+.ruff_cache/

@@ -1,0 +1,65 @@
+[build-system]
+requires = ["uv_build>=0.12,<0.13"]
+build-backend = "uv_build"
+
+[project]
+name = "torram-ng"
+version = "2.0.0.dev0"
+description = "Recover torrent data by reconstructing files from fully and partially downloaded sources"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Brian K" }]
+maintainers = [{ name = "Brian K" }]
+keywords = ["torrent", "bittorrent", "recovery", "data-recovery", "salvage"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Communications :: File Sharing",
+    "Topic :: System :: Archiving",
+    "Topic :: System :: Recovery Tools",
+]
+dependencies = ["bencode.py>=4.0"]
+
+[project.urls]
+Homepage = "https://github.com/kanya-approve/torram-ng"
+Repository = "https://github.com/kanya-approve/torram-ng"
+Issues = "https://github.com/kanya-approve/torram-ng/issues"
+
+[project.scripts]
+torram-ng = "torram_ng.cli:main"
+torram = "torram_ng.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[tool.uv.build-backend]
+module-name = "torram_ng"
+module-root = "src"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config -m 'not network'"
+xfail_strict = true
+markers = [
+    "network: fetches real torrent content over HTTPS; deselected by default, run with -m network",
+]
+
+[tool.ruff]
+target-version = "py38"
+line-length = 120
+src = ["src", "tests"]
+# cli.py is the original torram 0.9.0 script, vendored near-verbatim so the diff
+# against upstream stays reviewable. Its defects are tracked as issues and will be
+# resolved by the rewrite, not by lint churn. Excluded from both lint and format.
+extend-exclude = ["src/torram_ng/cli.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "PIE", "RUF"]
