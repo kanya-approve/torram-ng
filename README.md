@@ -82,8 +82,6 @@ These are inherited from the original implementation and are tracked as
 - **The merge path writes pieces at incorrect offsets** and never verifies the result, so
   combining sources can produce a corrupt file that reports success.
   ([#1](https://github.com/kanya-approve/torram-ng/issues/1))
-- **Scanning several drives can lose candidates**, because hardlink de-duplication keys on the
-  inode number without the device. ([#6](https://github.com/kanya-approve/torram-ng/issues/6))
 - **`--minsize` defaults to 1 MiB**, so small-file torrents recover nothing unless you pass
   `--minsize 0`. ([#14](https://github.com/kanya-approve/torram-ng/issues/14))
 - **`--symlink` does nothing** — it is parsed but never implemented.

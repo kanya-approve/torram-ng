@@ -76,10 +76,6 @@ def test_distinct_files_are_all_kept(tmp_path):
     assert kept == {str(a), str(b)}
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="hardlink dedup keys on st_ino without st_dev -- issue #6",
-)
 def test_same_inode_on_different_devices_are_both_kept(tmp_path, monkeypatch):
     """Inode numbers are only unique within a filesystem.
 
