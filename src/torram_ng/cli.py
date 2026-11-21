@@ -127,7 +127,7 @@ def remove_hard_links(files):
     inode_to_filename = {}
     for filename in files:
         stat_info = os.stat(filename)
-        inode_to_filename[stat_info[stat.ST_INO]] = filename
+        inode_to_filename[(stat_info[stat.ST_DEV], stat_info[stat.ST_INO])] = filename
     return inode_to_filename.values()
 
 
